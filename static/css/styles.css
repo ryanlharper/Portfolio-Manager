@@ -1,0 +1,79 @@
+h2 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1c1c1c;
+  font-family: Calibri, sans-serif;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: left;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  th,
+  td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-family: Calibri, sans-serif;
+  }
+  
+  thead tr {
+    background-color: #f2f2f2;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  span.negative_pct {
+      color: red;
+  }
+
+  span.negative_day {
+      color: red;
+  }
+
+  span.usd_allocation {
+    background-color: #FFFF99;
+    color: red;
+  }
+
+  tr.new {
+    color: green;
+  }
+
+  tr.upgrade {
+    color: blue;
+  }
+
+  tr.downgrade {
+    color: red
+  }
+
+  .bold-top-border {
+    border-top: 2px solid black;
+  }
+
+@media print {
+  body {
+    width: 8in;
+    height: 11in;
+    font-size: 10pt;
+    margin-top: 0.5in;
+    line-height: 0.1;
+  }
+  nav {
+    display: none;
+  }
+  footer {
+    display: none;
+  }
+}
+  
