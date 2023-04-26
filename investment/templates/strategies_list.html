@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+<h2>Investment Strategies for {{ user.username }}</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Model Holdings</th>
+        <th>Transactions</th>
+    </tr>
+    {% for strategy in strategies %}
+
+        <tr>
+        <td>{{ strategy.name }}</td>
+        <td><a href="{% url 'positions' strategy_id=strategy.id %}">Positions</a></td>
+        <td></td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No strategies found.</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

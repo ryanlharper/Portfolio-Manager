@@ -162,3 +162,5 @@ cython_debug/
 cli_notes.txt
 /model_manager/__pycache__/
 /model_manager/__init__.py
+/investment/migrations/
+/investment/__init__.py

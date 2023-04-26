@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{{ block.super }}
+
+<h2>Add Investment Strategy</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Strategy</button>
+  </form>
+
+{% endblock %}
+  
