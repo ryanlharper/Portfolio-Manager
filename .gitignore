@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 cli_notes.txt
-/model_manager/__pycache__/
-/model_manager/__init__.py
+/pm/__pycache__/
+/pm/__init__.py
 /investment/migrations/
 /investment/__init__.py

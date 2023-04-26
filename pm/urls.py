@@ -1,4 +1,4 @@
-"""model_manager URL Configuration
+"""pm URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -16,9 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from model_manager.views import SignUpView
-from investment.views import add_strategy, strategies_list, transactions_list, create_transaction
-from investment.views import positions
+from pm.views import SignUpView
+from investment.views import add_strategy, strategies_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +26,4 @@ urlpatterns = [
     path('register/', SignUpView.as_view(), name='register'),
     path('add_strategy/', add_strategy, name='add_strategy'),
     path('strategies/', strategies_list, name='strategies_list'),
-    path('transactions/', transactions_list, name='transactions_list'),
-    path('create_transaction/', create_transaction, name='create_transaction'),      
-    path('positions/<int:strategy_id>/', positions, name='positions'),
 ]

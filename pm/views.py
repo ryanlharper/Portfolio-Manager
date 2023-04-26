@@ -1,6 +1,6 @@
+from pm.forms import SignUpForm
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from model_manager.forms import SignUpForm
 
 class SignUpView(CreateView):
     form_class = SignUpForm

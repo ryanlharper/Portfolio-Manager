@@ -13,7 +13,7 @@
 
         <tr>
         <td>{{ strategy.name }}</td>
-        <td><a href="{% url 'positions' strategy_id=strategy.id %}">Positions</a></td>
+        <td></td>
         <td></td>
     </tr>
     {% empty %}
@@ -22,4 +22,5 @@
     </tr>
 {% endfor %}
 </table>
+<a href="{% url 'add_strategy'%}">Add Strategy</a>
 {% endblock %}

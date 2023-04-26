@@ -12,6 +12,6 @@ def create_position(sender, instance, created, **kwargs):
             symbol='*USD',
             description='Cash',
             cost=1.00,
-            allocation=100,
+            quantity=100,
         )
         position.save()
