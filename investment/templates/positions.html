@@ -3,15 +3,17 @@
 {% block content %}
 {{ block.super }}
 {% load humanize %}
-  <h2>{{ strategy.strategy_name }} Positions</h2>
+  <h2>{{ strategy.name }} Holdings</h2>
   <table>
     <thead>
       <tr>
         <th>Symbol</th>
         <th>Description</th>
+        <th>Quantity</th>
         <th>Price</th>
         <th>Cost</th>
-        <th>Return</th>
+        <th>Percent Return</th>
+        <th>Dollar Return</th>
         <th>Day Change</th>
         <th>Market Value</th>
         <th>Allocation</th>
@@ -22,15 +24,21 @@
       <tr>
         <td>{{ position.symbol|upper }}</td>
         <td>{{ position.description }}</td>
+        <td>{{ position.quantity|floatformat:"0"|intcomma }}</td>
         <td>${{ position.price|floatformat:"2" }}</td>
         <td>${{ position.cost|floatformat:"2" }}</td>
         {% if position.pct_change < 0 %}
-          <td><span class="negative_pct">{{ position.pct_change|floatformat:"2" }}%</span></td>
+          <td><span class="negative">{{ position.pct_change|floatformat:"2" }}%</span></td>
         {% else %}
           <td>{{ position.pct_change|floatformat:"2" }}%</td>
         {% endif %}
+        {% if position.dollar_return < 0 %}
+          <td><span class="negative">(${{ position.dollar_return|floatformat:"2"|cut:"-"|intcomma }})</td>
+        {% else %}
+        <td>${{ position.dollar_return|floatformat:"2"|intcomma }}</span></td>
+        {% endif %}
         {% if position.day_return < 0 %}
-          <td><span class="negative_day">{{ position.day_return|floatformat:"2"|intcomma }}%</td>
+          <td><span class="negative">{{ position.day_return|floatformat:"2"|intcomma }}%</td>
         {% else %}
         <td>{{ position.day_return|floatformat:"2"|intcomma }}%</span></td>
         {% endif %}
@@ -39,9 +47,13 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="7">No positions found.</td>
+        <td colspan="9">No positions found.</td>
       </tr>
       {% endfor %}
+      <tr>
+        <td colspan = "7", style="text-align: right; font-weight:bold">Total Market Value:     </td>
+        <td colspan="2", style="text-align: left; font-weight:bold">${{ total_portfolio_value|floatformat:"2"|intcomma }}</td>
+      </tr>
     </tbody>
   </table>
 {% endblock %}

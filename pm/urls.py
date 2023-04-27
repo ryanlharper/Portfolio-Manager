@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.views.generic.base import TemplateView
 from pm.views import SignUpView
 from investment.views import add_strategy, strategies_list, transactions_list, positions
+from investment.views import add_position, success_view, failure_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +27,9 @@ urlpatterns = [
     path('register/', SignUpView.as_view(), name='register'),
     path('add_strategy/', add_strategy, name='add_strategy'),
     path('strategies/', strategies_list, name='strategies_list'),
-    path('transactions/', transactions_list, name='transactions_list'),
+    path('transactions/<int:strategy_id>/', transactions_list, name='transactions_list'),
     path('positions/<int:strategy_id>/', positions, name='positions'),
+    path('add_position/<int:strategy_id>/', add_position, name='add_position'),   
+    path('success/', success_view, name='success'),   
+    path('failure/', failure_view, name='failure'),   
 ]

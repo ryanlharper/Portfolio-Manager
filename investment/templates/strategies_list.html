@@ -6,15 +6,15 @@
 <table>
     <tr>
         <th>Name</th>
-        <th>Model Holdings</th>
+        <th>Holdings</th>
         <th>Transactions</th>
     </tr>
     {% for strategy in strategies %}
 
         <tr>
         <td>{{ strategy.name }}</td>
-        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> 
-        <td><a href="{% url 'transactions_list' %}">Transactions</a></td>
+        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> | <a href="{% url 'add_position' strategy_id=strategy.id %}">Add</a>
+        <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}">View</a></td>
     </tr>
     {% empty %}
     <tr>
