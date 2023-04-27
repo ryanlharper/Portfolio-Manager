@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+{% load humanize %}
+  <h2>{{ strategy.strategy_name }} Positions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Cost</th>
+        <th>Return</th>
+        <th>Day Change</th>
+        <th>Market Value</th>
+        <th>Allocation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for position in positions %}
+      <tr>
+        <td>{{ position.symbol|upper }}</td>
+        <td>{{ position.description }}</td>
+        <td>${{ position.price|floatformat:"2" }}</td>
+        <td>${{ position.cost|floatformat:"2" }}</td>
+        {% if position.pct_change < 0 %}
+          <td><span class="negative_pct">{{ position.pct_change|floatformat:"2" }}%</span></td>
+        {% else %}
+          <td>{{ position.pct_change|floatformat:"2" }}%</td>
+        {% endif %}
+        {% if position.day_return < 0 %}
+          <td><span class="negative_day">{{ position.day_return|floatformat:"2"|intcomma }}%</td>
+        {% else %}
+        <td>{{ position.day_return|floatformat:"2"|intcomma }}%</span></td>
+        {% endif %}
+        <td>${{ position.market_value|floatformat:"0"|intcomma }}</td>
+        <td>{{ position.percent_portfolio|floatformat:"2" }}%</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No positions found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

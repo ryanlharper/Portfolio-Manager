@@ -42,16 +42,14 @@ class Position(models.Model):
             return price
         else:
             price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
-            return price
+            return Decimal(price)
     
     def pct_change(self):
         if self.symbol == '*USD':
             pct_change = 0.00
             return pct_change
         else:  
-            price = Decimal(str(yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]))
-            cost = Decimal(str(self.cost))
-            pct_change = ((price / cost) - Decimal('1')) * 100
+            pct_change = ((self.price() / self.cost) - Decimal('1')) * 100
             return float(pct_change)
     
     def day_return(self):
@@ -65,7 +63,7 @@ class Position(models.Model):
             return day_return
     
     def market_value(self):
-        return self.quantity * self.price
+        return self.quantity * self.price()
 
     def percent_portfolio(self):
         strategy_positions = Position.objects.filter(strategy=self.strategy)

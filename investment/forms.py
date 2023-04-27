@@ -4,7 +4,7 @@ from investment.models import Strategy, Transaction, Position
 
 class NewStrategyForm(forms.Form):
     name = forms.CharField(max_length=100)
-    value = forms.IntegerField()
+    value = forms.DecimalField()
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

@@ -13,8 +13,8 @@
 
         <tr>
         <td>{{ strategy.name }}</td>
-        <td></td>
-        <td></td>
+        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> 
+        <td><a href="{% url 'transactions_list' %}">Transactions</a></td>
     </tr>
     {% empty %}
     <tr>
