@@ -72,4 +72,12 @@ table {
     display: none;
   }
 }
-  
+
+.my-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+}

@@ -4,10 +4,12 @@
 {{ block.super }}
 {% load humanize %}
   <h2>{{ strategy.name }} Holdings</h2>
+  <a href="{% url 'add_position' strategy_id=strategy.id %}">Add Position</a>
   <table>
     <thead>
       <tr>
         <th>Symbol</th>
+        <th>Sell</th>
         <th>Description</th>
         <th>Quantity</th>
         <th>Price</th>
@@ -23,10 +25,19 @@
       {% for position in positions %}
       <tr>
         <td>{{ position.symbol|upper }}</td>
+        {% if position.symbol == '*USD' %}
+        <td></td>
+        {% else %}
+        <td>
+          <a href="{% url 'sell_position' strategy_id=strategy.id symbol=position.symbol %}">
+            <button class="my-button">Sell</button>
+          </a>
+        </td>
+        {% endif %}
         <td>{{ position.description }}</td>
         <td>{{ position.quantity|floatformat:"0"|intcomma }}</td>
-        <td>${{ position.price|floatformat:"2" }}</td>
-        <td>${{ position.cost|floatformat:"2" }}</td>
+        <td>${{ position.price|floatformat:"2"|intcomma }}</td>
+        <td>${{ position.cost|floatformat:"2"|intcomma }}</td>
         {% if position.pct_change < 0 %}
           <td><span class="negative">{{ position.pct_change|floatformat:"2" }}%</span></td>
         {% else %}
@@ -47,12 +58,13 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="9">No positions found.</td>
+        <td colspan="10">No positions found.</td>
       </tr>
       {% endfor %}
       <tr>
-        <td colspan = "7", style="text-align: right; font-weight:bold">Total Market Value:     </td>
-        <td colspan="2", style="text-align: left; font-weight:bold">${{ total_portfolio_value|floatformat:"2"|intcomma }}</td>
+        <td colspan = "8"></td>
+        <td colspan="3", style="font-weight:bold">${{ total_portfolio_value|floatformat:"0"|intcomma }}</td>
+        <td></td>
       </tr>
     </tbody>
   </table>

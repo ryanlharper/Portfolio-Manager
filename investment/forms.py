@@ -41,11 +41,7 @@ class NewStrategyForm(forms.Form):
         )
         return strategy, position
     
-class AddPositionForm(forms.Form):
-    widgets = {
-            'date': DateInput(attrs={'type': 'date'})
-        }
-    
+class AddPositionForm(forms.Form):   
     symbol = forms.CharField(max_length=8, required=True)
     description = forms.CharField(max_length=128, required=True) 
     quantity = forms.DecimalField(decimal_places=2, max_digits=10, required=True)
@@ -58,6 +54,26 @@ class AddPositionForm(forms.Form):
         self.request = kwargs.pop('request', None)
         super(AddPositionForm, self).__init__(*args, **kwargs)   
     
+    def clean_symbol(self):
+        symbol = self.cleaned_data['symbol']
+        try:
+            stock_info = yf.Ticker(symbol).history(period='1d')['Close'].iloc[-1]
+        except:
+            raise ValidationError("Invalid symbol")
+        return symbol
+    
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+        if quantity <=0:
+            raise ValidationError("Quantity must be greater than zero.")
+        return quantity
+    
+    def clean_cost(self):
+        cost = self.cleaned_data['cost']
+        if cost <=0:
+            raise ValidationError("Cost must be greater than zero.")
+        return cost
+        
     def clean_data(self):
         cleaned_data = super().clean()
         symbol = cleaned_data.get('symbol').upper()
@@ -66,22 +82,40 @@ class AddPositionForm(forms.Form):
         description = cleaned_data.get('description')
         date = cleaned_data.get('date')
 
-        # check if symbol is valid
-        try:
-            stock_info = yf.Ticker(symbol).history(period='1d')['Close'].iloc[-1]
-        except:
-            raise ValidationError("Invalid symbol")
-        
-        # check for positive quantity
+        return cleaned_data
+    
+class SellPositionForm(forms.Form):
+    symbol = forms.CharField(widget=forms.HiddenInput())
+    strategy = forms.IntegerField(widget=forms.HiddenInput())
+    quantity = forms.DecimalField(decimal_places=2, max_digits=20)
+    cost = forms.DecimalField(decimal_places=2, max_digits=20, label='Price per Share')
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        symbol = kwargs.pop('symbol')
+        strategy = kwargs.pop('strategy')
+        super().__init__(*args, **kwargs)
+        self.fields['symbol'].initial = symbol
+        self.fields['strategy'].initial = strategy
+        self.fields['quantity'].initial = Position.objects.get(user=user, symbol=symbol, strategy=strategy).quantity
+        self.user = user
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
         if quantity <=0:
             raise ValidationError("Quantity must be greater than zero.")
-        
-        # check for valid cost
+        return quantity
+
+    def clean_cost(self):
+        cost = self.cleaned_data['cost']
         if cost <=0:
-            raise ValidationError("Cost per share must be greater than zero.")
+            raise ValidationError("Cost must be greater than zero.")
+        return cost
 
-        cash_position = Position.objects.get(user=self.user, symbol='*USD', strategy=self.strategy)
-        if cash_position.quantity < cost * quantity:
-            raise forms.ValidationError("Insufficient funds.")
-
+    def clean(self):
+        cleaned_data = super().clean()
+        quantity = cleaned_data.get('quantity')
+        cost = cleaned_data.get('cost')
+        date = cleaned_data.get('date')
         return cleaned_data

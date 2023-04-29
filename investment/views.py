@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from investment.forms import NewStrategyForm, AddPositionForm
+from investment.forms import NewStrategyForm, AddPositionForm, SellPositionForm
 from investment.models import Strategy, Transaction, Position
 from decimal import Decimal
 
@@ -14,6 +14,18 @@ def add_strategy(request):
     else:
         form = NewStrategyForm(user=request.user)
     return render(request, 'add_strategy.html', {'form': form})
+
+@login_required
+def delete_strategy(request):
+    if request.method == 'POST':
+        strategy_id = request.POST.get('strategy')
+        strategy = Strategy.objects.get(id=strategy_id, user=request.user)
+        strategy.delete()
+        return redirect('strategies_list')
+    else:
+        strategies = Strategy.objects.filter(user=request.user).order_by('name')
+        context = {'strategies': strategies}
+        return render(request, 'delete_strategy.html', context)
 
 @login_required
 def strategies_list(request):
@@ -81,6 +93,10 @@ def add_position(request, strategy_id):
             except Position.DoesNotExist:
                 position = None
             
+            cash_position = Position.objects.get(user=request.user, symbol='*USD', strategy=strategy)
+            if cash_position.quantity < cost * quantity:
+                return redirect('failure')                    
+            
             if position is None:
                 position = Position.objects.create(
                 user=user,
@@ -115,7 +131,7 @@ def add_position(request, strategy_id):
                 date=date,
                 )
             transaction.save()
-            return redirect('success')
+            return redirect('positions', strategy_id=strategy_id)
 
     context = {
         'form': form
@@ -127,3 +143,60 @@ def success_view(request):
 
 def failure_view(request):
     return render(request, 'failure.html')
+
+def sell_position(request, strategy_id, symbol):
+    strategy = get_object_or_404(Strategy, id=strategy_id)
+
+    if request.method == 'POST':
+        form = SellPositionForm(request.POST, symbol=symbol, strategy=strategy.id, user=request.user)
+        if request.method == 'POST':
+            if form.is_valid():
+                # process the form data and redirect to a success page
+                user = request.user
+                cleaned_data = form.cleaned_data
+                type = 'sell'
+                symbol = symbol
+                strategy = strategy
+                quantity = cleaned_data['quantity']
+                cost = cleaned_data['cost']
+                date = cleaned_data['date']
+
+                position = Position.objects.get(user=user, symbol=symbol, strategy=strategy)
+                if quantity > position.quantity:
+                    return redirect('failure')
+                elif quantity < position.quantity:
+                    new_quantity = position.quantity - quantity
+                    position.quantity = new_quantity
+                    position.save()
+                    cash_position = Position.objects.get(user=user, symbol='*USD', strategy=strategy)
+                    cash_position.quantity += cost * quantity
+                    cash_position.save()
+                else:
+                    position_to_delete = Position.objects.get(user=user, symbol=symbol, strategy=strategy)
+                    position_to_delete.delete()
+                    cash_position = Position.objects.get(user=user, symbol='*USD', strategy=strategy)
+                    cash_position.quantity += cost * quantity
+                    cash_position.save()
+                
+                transaction = Transaction.objects.create(
+                    user=user,
+                    strategy=strategy,
+                    type=type,
+                    symbol=symbol,
+                    quantity=quantity,
+                    price=cost,
+                    date=date
+                )
+                transaction.save()
+                return redirect('positions', strategy_id=strategy.id)
+                    
+    else:
+        form = SellPositionForm(symbol=symbol, strategy=strategy.id, user=request.user)
+
+    context = {
+        'form': form,
+        'strategy': strategy,
+        'symbol': symbol
+    }
+
+    return render(request, 'sell_position.html', context)

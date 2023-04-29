@@ -13,7 +13,7 @@
 
         <tr>
         <td>{{ strategy.name }}</td>
-        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> | <a href="{% url 'add_position' strategy_id=strategy.id %}">Add</a>
+        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> | <a href="{% url 'add_position' strategy_id=strategy.id %}">Add</a></td>
         <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}">View</a></td>
     </tr>
     {% empty %}
@@ -22,5 +22,9 @@
     </tr>
 {% endfor %}
 </table>
-<a href="{% url 'add_strategy'%}">Add Strategy</a>
+<nav>
+    <il><a href="{% url 'add_strategy'%}">Add Strategy</a></il> |
+    <il><a href="{% url 'delete_strategy'%}">Delete Strategy</a></il>
+</nav>
+
 {% endblock %}

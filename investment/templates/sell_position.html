@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{{ block.super }}
+
+<h2>Sell {{ symbol }} in {{ strategy.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sell</button>
+    </form>
+{% endblock %}

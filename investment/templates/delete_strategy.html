@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{{ block.super }}
+
+<h2>Delete Investment Strategy</h2>
+
+<form method="POST" action="{% url 'delete_strategy' %}">
+    {% csrf_token %}
+    <label for="strategy">Select strategy to delete:</label>
+    <select name="strategy" id="strategy">
+      {% for strategy in strategies %}
+      <option value="{{ strategy.id }}">{{ strategy.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Delete</button>
+</form>
+
+{% endblock %}
+  
