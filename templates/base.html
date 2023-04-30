@@ -12,11 +12,11 @@
 <body>
   <main>
     {% block content %}
-    <nav class = "navbar">
-      <a href="{% url 'strategies_list' %}">Home</a> |
-      <a href="{% url 'login' %}">Login</a> |
-      <a href="{% url 'register' %}">Register</a> |
-      <a href="{% url 'logout' %}">Logout</a> |       
+    <nav class="navbar">
+      <a href="{% url 'strategies_list' %}"><button class="button">Home</button></a>
+      <a href="{% url 'login' %}"><button class="button">Login</button></a>
+      <a href="{% url 'register' %}"><button class="button">Register</button></a>
+      <a href="{% url 'logout' %}"><button class="button">Logout</button></a>  
     </nav>
     {% endblock %}
   </main>

@@ -19,7 +19,7 @@ from django.views.generic.base import TemplateView
 from pm.views import SignUpView
 from investment.views import add_strategy, strategies_list, transactions_list, positions
 from investment.views import add_position, success_view, failure_view, delete_strategy
-from investment.views import sell_position
+from investment.views import sell_position, increase_position, edit_strategy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,4 +35,6 @@ urlpatterns = [
     path('success/', success_view, name='success'),   
     path('failure/', failure_view, name='failure'),   
     path('sell/<int:strategy_id>/<str:symbol>/', sell_position, name='sell_position'),
+    path('increase/<int:strategy_id>/<str:symbol>/', increase_position, name='increase_position'),
+    path('edit-strategy/', edit_strategy, name='edit_strategy'),
 ]

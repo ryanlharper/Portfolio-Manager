@@ -119,3 +119,43 @@ class SellPositionForm(forms.Form):
         cost = cleaned_data.get('cost')
         date = cleaned_data.get('date')
         return cleaned_data
+    
+class IncreasePositionForm(forms.Form):
+    symbol = forms.CharField(widget=forms.HiddenInput())
+    strategy = forms.IntegerField(widget=forms.HiddenInput())
+    quantity = forms.DecimalField(decimal_places=2, max_digits=20)
+    cost = forms.DecimalField(decimal_places=2, max_digits=20, label='Price per Share')
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        symbol = kwargs.pop('symbol')
+        strategy = kwargs.pop('strategy')
+        super().__init__(*args, **kwargs)
+        self.fields['symbol'].initial = symbol
+        self.fields['strategy'].initial = strategy
+        self.user = user
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+        if quantity <=0:
+            raise ValidationError("Quantity must be greater than zero.")
+        return quantity
+
+    def clean_cost(self):
+        cost = self.cleaned_data['cost']
+        if cost <=0:
+            raise ValidationError("Cost must be greater than zero.")
+        return cost
+
+    def clean(self):
+        cleaned_data = super().clean()
+        quantity = cleaned_data.get('quantity')
+        cost = cleaned_data.get('cost')
+        date = cleaned_data.get('date')
+        return cleaned_data
+
+class EditStrategyForm(forms.ModelForm):
+    class Meta:
+        model = Strategy
+        fields = ['name']

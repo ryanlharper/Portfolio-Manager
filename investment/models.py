@@ -74,4 +74,8 @@ class Position(models.Model):
     def percent_portfolio(self):
         strategy_positions = Position.objects.filter(strategy=self.strategy)
         total_portfolio_value = sum(position.market_value() for position in strategy_positions)
-        return (self.market_value() / total_portfolio_value) * 100
+        if total_portfolio_value == 0:
+            percent_portfolio = 0
+            return percent_portfolio
+        else:
+            return (self.market_value() / total_portfolio_value) * 100

@@ -5,11 +5,12 @@
 {% load humanize %}
   <h2>{{ strategy.name }} Holdings</h2>
   
-  <div class = "table-reponsive-md">
-    <table class="table-bordered table-hover table-striped">
+  <div class = "table-responsive">
+    <table class="table">
     <thead>
       <tr>
-        <th colspan="2">Symbol</th>
+        <th>Symbol</th>
+        <th>Transact</th>
         <th>Description</th>
         <th>Quantity</th>
         <th>Price</th>
@@ -26,12 +27,14 @@
       <tr>
         <td>{{ position.symbol|upper }}</td>
         {% if position.symbol == '*USD' %}
-        <td></td>
+        <td>
+          <a href="{% url 'sell_position' strategy_id=strategy.id symbol=position.symbol %}"><button class="button">Withdraw</button></a>
+            <a href="{% url 'increase_position' strategy_id=strategy.id symbol=position.symbol %}"><button class="button">Deposit</button></a>
+        </td>
         {% else %}
-        <td style="text-align:center">
-          <a href="{% url 'sell_position' strategy_id=strategy.id symbol=position.symbol %}">
-            <button class="button">Sell</button>
-          </a>
+        <td>
+          <a href="{% url 'sell_position' strategy_id=strategy.id symbol=position.symbol %}"><button class="button">Sell</button></a>
+            <a href="{% url 'increase_position' strategy_id=strategy.id symbol=position.symbol %}"><button class="button">Buy</button></a>
         </td>
         {% endif %}
         <td>{{ position.description }}</td>
@@ -39,17 +42,17 @@
         <td>${{ position.price|floatformat:"2"|intcomma }}</td>
         <td>${{ position.cost|floatformat:"2"|intcomma }}</td>
         {% if position.pct_change < 0 %}
-          <td><span class="negative">{{ position.pct_change|floatformat:"2" }}%</span></td>
+          <td style="color:red">{{ position.pct_change|floatformat:"2" }}%</td>
         {% else %}
           <td>{{ position.pct_change|floatformat:"2" }}%</td>
         {% endif %}
         {% if position.dollar_return < 0 %}
-          <td><span class="negative">(${{ position.dollar_return|floatformat:"2"|cut:"-"|intcomma }})</td>
+          <td style="color:red">(${{ position.dollar_return|floatformat:"2"|cut:"-"|intcomma }})</td>
         {% else %}
-        <td>${{ position.dollar_return|floatformat:"2"|intcomma }}</span></td>
+        <td>${{ position.dollar_return|floatformat:"2"|intcomma }}</td>
         {% endif %}
         {% if position.day_return < 0 %}
-          <td><span class="negative">{{ position.day_return|floatformat:"2"|intcomma }}%</td>
+          <td style="color:red">{{ position.day_return|floatformat:"2"|intcomma }}%</td>
         {% else %}
         <td>{{ position.day_return|floatformat:"2"|intcomma }}%</span></td>
         {% endif %}
@@ -64,7 +67,7 @@
       <tr>
         <td colspan = "8"></td>
         {% if total_day_pct_change < 0 %}
-        <td style="font-weight:bold" class="negative">{{ total_day_pct_change|floatformat:"2" }}%</td>
+        <td style="font-weight:bold; color:red">{{ total_day_pct_change|floatformat:"2" }}%</td>
         {% else %}
         <td style="font-weight:bold">{{ total_day_pct_change|floatformat:"2" }}%</td>
         {% endif %} 
@@ -74,7 +77,7 @@
     </tbody>
   </table>
   <nav class ="navbar">
-    <ul><a href="{% url 'add_position' strategy_id=strategy.id %}">Add Position</a></ul> |
-    <ul>Edit Position</ul> |
+    <a href="{% url 'add_position' strategy_id=strategy.id %}"><button class="button">Add Position</button></a>
+    <a href="{% url 'transactions_list' strategy_id=strategy.id%}"><button class="button">View Transactions</button></a>
   </nav>
 {% endblock %}

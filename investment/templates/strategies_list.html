@@ -3,10 +3,10 @@
 {% block content %}
 {{ block.super }}
 <h2>Investment Strategies for {{ user.username }}</h2>
-<div class = "table-reponsive-md">
-    <table class="table-bordered table-hover table-striped">
+<div class = "table">
+    <table class="table">
     <tr>
-        <th>Name</th>
+        <th>Portfolio</th>
         <th>Holdings</th>
         <th>Transactions</th>
     </tr>
@@ -14,8 +14,10 @@
 
         <tr>
         <td>{{ strategy.name }}</td>
-        <td><a href="{% url 'positions' strategy_id=strategy.id %}">View</a> | <a href="{% url 'add_position' strategy_id=strategy.id %}">Add</a></td>
-        <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}">View</a></td>
+        <td>
+            <a href="{% url 'positions' strategy_id=strategy.id %}"><button class="button">View</button></a> 
+            <a href="{% url 'add_position' strategy_id=strategy.id %}"><button class="button">Add</button></a></td>
+        <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}"><button class="button">View</button></a></td>
     </tr>
     {% empty %}
     <tr>
@@ -24,10 +26,9 @@
 {% endfor %}
 </table>
 <nav class="navbar">
-    <ul><a href="{% url 'add_strategy'%}">Add Strategy</a></ul> |
-    <ul>Edit Strategy</ul> |
-    <ul><a href="{% url 'delete_strategy'%}">Delete Strategy</a></ul> |
-    
+    <a href="{% url 'add_strategy'%}"><button class="button">Add Strategy</button></a>
+    <a href="{% url 'edit_strategy'%}"><button class="button">Edit Strategy</button></a>
+    <a href="{% url 'delete_strategy'%}"><button class="button">Delete Strategy</button></a></il>    
 </nav>
 
 {% endblock %}

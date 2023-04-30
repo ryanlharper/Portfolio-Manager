@@ -4,8 +4,8 @@
 {{ block.super }}
 {% load humanize %}
 <h2>{{ strategy.name }} Transactions</h2>
-<div class = "table-reponsive-md">
-    <table class="table-bordered table-hover table-striped">
+<div class = "table">
+    <table class="table">
     <tr>
         <th>Date</th>
         <th>Type</th>
@@ -30,4 +30,7 @@
     </tr>
 {% endfor %}
 </table></div>
+<nav class ="navbar">
+    <a href="{% url 'positions' strategy_id=strategy.id %}"><button class="button">View Positions</button></a>
+  </nav>
 {% endblock %}

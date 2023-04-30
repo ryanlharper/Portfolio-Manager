@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Edit Strategy Name</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="strategy">Select a strategy:</label>
+    <select name="strategy" class="form-control">
+      {% for strategy in strategies %}
+      <option value="{{ strategy.id }}">{{ strategy.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="name">New Name:</label>
+    {{ form.name }}
+  </div>
+  <button type="submit" class="button">Save Changes</button>
+</form>
+
+{% endblock %}
+  
