@@ -4,29 +4,30 @@
 {{ block.super }}
 {% load humanize %}
 <h2>{{ strategy.name }} Transactions</h2>
-<table>
+<div class = "table-reponsive-md">
+    <table class="table-bordered table-hover table-striped">
     <tr>
         <th>Date</th>
-        <th>Strategy</th>
         <th>Type</th>
         <th>Symbol</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Total</th>
     </tr>
     {% for transaction in transactions %}
 
         <tr>
         <td>{{ transaction.date }}</td>
-        <td>{{ transaction.strategy }}</td>
         <td>{{ transaction.get_type_display }}</td>
         <td>{{ transaction.symbol }}</td>
         <td>{{ transaction.quantity|intcomma }}</td>
         <td>{{ transaction.price }}</td>
+        <td>${{ transaction.total|intcomma }}</td>
     </tr>
     {% empty %}
     <tr>
         <td colspan="6">No transactions found.</td>
     </tr>
 {% endfor %}
-</table>
+</table></div>
 {% endblock %}

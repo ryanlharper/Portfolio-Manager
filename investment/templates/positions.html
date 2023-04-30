@@ -4,12 +4,12 @@
 {{ block.super }}
 {% load humanize %}
   <h2>{{ strategy.name }} Holdings</h2>
-  <a href="{% url 'add_position' strategy_id=strategy.id %}">Add Position</a>
-  <table>
+  
+  <div class = "table-reponsive-md">
+    <table class="table-bordered table-hover table-striped">
     <thead>
       <tr>
-        <th>Symbol</th>
-        <th>Sell</th>
+        <th colspan="2">Symbol</th>
         <th>Description</th>
         <th>Quantity</th>
         <th>Price</th>
@@ -28,9 +28,9 @@
         {% if position.symbol == '*USD' %}
         <td></td>
         {% else %}
-        <td>
+        <td style="text-align:center">
           <a href="{% url 'sell_position' strategy_id=strategy.id symbol=position.symbol %}">
-            <button class="my-button">Sell</button>
+            <button class="button">Sell</button>
           </a>
         </td>
         {% endif %}
@@ -63,9 +63,18 @@
       {% endfor %}
       <tr>
         <td colspan = "8"></td>
-        <td colspan="3", style="font-weight:bold">${{ total_portfolio_value|floatformat:"0"|intcomma }}</td>
+        {% if total_day_pct_change < 0 %}
+        <td style="font-weight:bold" class="negative">{{ total_day_pct_change|floatformat:"2" }}%</td>
+        {% else %}
+        <td style="font-weight:bold">{{ total_day_pct_change|floatformat:"2" }}%</td>
+        {% endif %} 
+        <td style="font-weight:bold">${{ total_portfolio_value|floatformat:"0"|intcomma }}</td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <nav class ="navbar">
+    <ul><a href="{% url 'add_position' strategy_id=strategy.id %}">Add Position</a></ul> |
+    <ul>Edit Position</ul> |
+  </nav>
 {% endblock %}

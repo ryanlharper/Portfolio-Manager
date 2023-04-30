@@ -25,11 +25,14 @@ class Transaction(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=None)
     date = models.DateField()
 
+    def total(self):
+        return self.price * self.quantity
+
 class Position(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
     symbol = models.CharField(max_length=8)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=None)
+    quantity = models.DecimalField(max_digits=15, decimal_places=2, default=None)
     description = models.CharField(max_length=128, default="undetermined")
     cost = models.DecimalField(max_digits=10, decimal_places=2, default=None)
         
@@ -63,7 +66,7 @@ class Position(models.Model):
             return day_return
     
     def market_value(self):
-        return self.quantity * self.price()
+        return float(self.quantity * self.price())
     
     def dollar_return(self):
         return((self.price() - self.cost)*self.quantity)

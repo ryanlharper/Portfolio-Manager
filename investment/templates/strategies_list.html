@@ -3,7 +3,8 @@
 {% block content %}
 {{ block.super }}
 <h2>Investment Strategies for {{ user.username }}</h2>
-<table>
+<div class = "table-reponsive-md">
+    <table class="table-bordered table-hover table-striped">
     <tr>
         <th>Name</th>
         <th>Holdings</th>
@@ -22,9 +23,11 @@
     </tr>
 {% endfor %}
 </table>
-<nav>
-    <il><a href="{% url 'add_strategy'%}">Add Strategy</a></il> |
-    <il><a href="{% url 'delete_strategy'%}">Delete Strategy</a></il>
+<nav class="navbar">
+    <ul><a href="{% url 'add_strategy'%}">Add Strategy</a></ul> |
+    <ul>Edit Strategy</ul> |
+    <ul><a href="{% url 'delete_strategy'%}">Delete Strategy</a></ul> |
+    
 </nav>
 
 {% endblock %}

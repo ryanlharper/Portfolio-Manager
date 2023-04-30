@@ -57,15 +57,19 @@ def positions(request, strategy_id):
     positions = Position.objects.filter(strategy=strategy).order_by('symbol')
 
     market_value = []
+    total_day_return = []
     for position in positions:
         market_value.append(position.market_value())
+        total_day_return.append(position.day_return()*(position.percent_portfolio()/100))
     
     total_portfolio_value = sum(market_value)
+    total_day_pct_change = sum(total_day_return)
 
     context = {
         'strategy': strategy, 
         'positions': positions,
         'total_portfolio_value': total_portfolio_value,
+        'total_day_pct_change': total_day_pct_change,
         }
     
     return render(request, 'positions.html', context)

@@ -69,15 +69,21 @@ table {
     display: none;
   }
   footer {
-    display: none;
+    display: none,
   }
 }
 
-.my-button {
-  background-color: #007bff;
-  color: #fff;
+.btn {
+  background-color: lightgrey;
+  color: white;
+  padding: 6px 6px;
+  border-radius: 3px;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  text-decoration: none;
+  text-align: center;
+  text-decoration-style: none;
+  font-family: Calibri, sans-serif;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
 }
