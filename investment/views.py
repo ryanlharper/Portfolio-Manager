@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from investment.forms import NewStrategyForm, AddPositionForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
-from investment.models import Strategy, Transaction, Position
+from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm, AddSecurityForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
+from investment.models import Strategy, Transaction, Position, Watchlist, WatchedStock
 from decimal import Decimal
 
 @login_required
@@ -244,6 +244,7 @@ def sell_position(request, strategy_id, symbol):
 
     return render(request, 'sell_position.html', context)
 
+@login_required
 def increase_position(request, strategy_id, symbol):
     strategy = get_object_or_404(Strategy, id=strategy_id)
 
@@ -304,3 +305,79 @@ def increase_position(request, strategy_id, symbol):
     }
 
     return render(request, 'increase_position.html', context)
+
+@login_required
+def add_watchlist(request):
+    if request.method == 'POST':
+        form = NewWatchlistForm(request.POST, user=request.user, request=request)
+        if form.is_valid():
+            watchlist = form.save()
+            return redirect('watchlists_list')
+    else:
+        form = NewWatchlistForm(user=request.user)
+    return render(request, 'add_watchlist.html', {'form': form})
+
+@login_required
+def watchlist(request, watchlist_id):
+    user = request.user
+    watchlist = get_object_or_404(Watchlist, pk=watchlist_id, user=user)
+    symbols = WatchedStock.objects.filter(watchlist=watchlist).order_by('symbol')
+
+    context = {
+        'watchlist': watchlist, 
+        'symbols': symbols,
+        }
+    return render(request, 'watchlist.html', context)
+
+@login_required
+def watchlists_list(request):
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
+
+    context = {
+        'user': request.user,
+        'watchlists': watchlists,
+    }
+    return render(request, 'watchlists_list.html', context)
+
+@login_required
+def add_security(request, watchlist_id):
+    user = request.user
+    watchlist = get_object_or_404(Watchlist, pk=watchlist_id, user=user)
+    if request.method == 'POST':
+        form = AddSecurityForm(request.POST, user=user, watchlist=watchlist)
+        if form.is_valid():
+            user = request.user
+            cleaned_data = form.clean_data()
+            symbol = cleaned_data['symbol'].upper()
+            
+            # Get the wacthlist item for this symbol if exists
+            watchlist_item = WatchedStock.objects.filter(user=user, symbol=symbol, watchlist=watchlist).first()
+            if watchlist_item:
+                return redirect('failure') 
+            else:
+                watchlist_item = WatchedStock.objects.create(
+                user=user,
+                watchlist = watchlist,
+                symbol=symbol,   
+                )
+                watchlist_item.save()
+            return redirect('watchlist', watchlist_id=watchlist_id)
+    else:
+        form = AddSecurityForm(user=request.user)
+
+    context = {
+        'form': form,
+        'watchlist': watchlist,
+    }
+    return render(request, 'add_security.html', context)
+
+from .models import Strategy, Watchlist
+
+def home(request):
+    strategies = Strategy.objects.all()
+    watchlists = Watchlist.objects.all()
+    context = {
+        'strategies': strategies,
+        'watchlists': watchlists,
+    }
+    return render(request, 'home.html', context)

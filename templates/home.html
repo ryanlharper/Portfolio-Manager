@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Portfolio Manager{% endblock %}
 
 {% block content %}
 {{ block.super }}
 {% if user.is_authenticated %}
-<h2>Home</h2>
-  Hi {{ user.username }}!
+<h2>Portfolio Manager Home</h2>
+
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>
 {% endif %}
 {% endblock %}
+
   
 

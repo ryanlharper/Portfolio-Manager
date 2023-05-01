@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from investment.models import Strategy, Transaction, Position
+from investment.models import Strategy, Transaction, Position, Watchlist
 from django.forms.widgets import DateInput
 from django.core.exceptions import ValidationError
 import yfinance as yf
@@ -159,3 +159,48 @@ class EditStrategyForm(forms.ModelForm):
     class Meta:
         model = Strategy
         fields = ['name']
+
+class NewWatchlistForm(forms.Form):
+    name = forms.CharField(max_length=100)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.request = kwargs.pop('request', None)
+        super(NewWatchlistForm, self).__init__(*args, **kwargs)
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if Watchlist.objects.filter(user=self.user, name=name).exists():
+            raise forms.ValidationError("This watchlist is already in use. Please use a different strategy name.")
+        return name
+
+    def save(self):
+        watchlist = Watchlist.objects.create(
+            user=self.user,
+            name=self.cleaned_data['name'],
+        )
+        return watchlist
+    
+class AddSecurityForm(forms.Form):   
+    symbol = forms.CharField(max_length=8, required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.watchlist = kwargs.pop('watchlist', None)
+        self.request = kwargs.pop('request', None)
+        super(AddSecurityForm, self).__init__(*args, **kwargs)   
+    
+    def clean_symbol(self):
+        symbol = self.cleaned_data['symbol']
+        try:
+            stock_info = yf.Ticker(symbol).history(period='1d')['Close'].iloc[-1]
+        except:
+            raise ValidationError("Invalid symbol")
+        return symbol
+
+    def clean_data(self):
+        cleaned_data = super().clean()
+        symbol = cleaned_data.get('symbol').upper()
+        if not symbol:
+            raise ValidationError("Symbol is required.")
+        return cleaned_data

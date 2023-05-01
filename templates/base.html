@@ -13,7 +13,9 @@
   <main>
     {% block content %}
     <nav class="navbar">
-      <a href="{% url 'strategies_list' %}"><button class="button">Home</button></a>
+      <a href="{% url 'home' %}"><button class="button">Home</button></a>
+      <a href="{% url 'strategies_list' %}"><button class="button"> Strategies</button></a>
+      <a href="{% url 'watchlists_list' %}"><button class="button">Watchlists</button>
       <a href="{% url 'login' %}"><button class="button">Login</button></a>
       <a href="{% url 'register' %}"><button class="button">Register</button></a>
       <a href="{% url 'logout' %}"><button class="button">Logout</button></a>  

@@ -79,3 +79,39 @@ class Position(models.Model):
             return percent_portfolio
         else:
             return (self.market_value() / total_portfolio_value) * 100
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=128)
+
+    unique_together = (user,name)
+
+    def __str__(self):
+        return self.name
+ 
+class WatchedStock(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    watchlist = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
+    symbol = models.CharField(max_length=8)
+        
+    def __str__(self):
+        return self.symbol
+    
+    def price(self):
+        if self.symbol == '*USD':
+            price = 1
+            return price
+        else:
+            price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            return Decimal(price)
+    
+    def day_return(self):
+        if self.symbol == '*USD':
+            day_return = 0
+            return day_return
+        else:
+            begining_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-2]
+            realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            day_return = ((realtime_price / begining_price) - 1) * 100
+            return day_return
+        

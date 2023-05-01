@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+<h2>Watchlists for {{ user.username }}</h2>
+<div class = "table">
+    <table class="table">
+    <tr>
+        <th>Watchlist</th>
+    </tr>
+    {% for watchlist in watchlists %}
+        <tr>
+        <td><a href="{% url 'watchlist' watchlist_id=watchlist.id %}"><button class="button">{{ watchlist.name }}</button></td>
+        
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="1">No watchlists found.</td>
+    </tr>
+{% endfor %}
+</table>
+<nav class="navbar">
+    <a href="{% url 'add_watchlist'%}"><button class="button">Add Watchlist</button></a>
+</nav>
+{% endblock %}
