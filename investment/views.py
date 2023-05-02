@@ -47,10 +47,12 @@ def edit_strategy(request):
 @login_required
 def strategies_list(request):
     strategies = Strategy.objects.filter(user=request.user).order_by('name')
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
 
     context = {
         'user': request.user,
         'strategies': strategies,
+        'watchlists': watchlists
     }
     return render(request, 'strategies_list.html', context)
 
@@ -72,6 +74,8 @@ def positions(request, strategy_id):
     user = request.user
     strategy = get_object_or_404(Strategy, pk=strategy_id, user=user)
     positions = Position.objects.filter(strategy=strategy).order_by('symbol')
+    strategies = Strategy.objects.filter(user=request.user).order_by('name')
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
 
     market_value = []
     total_day_return = []
@@ -91,6 +95,8 @@ def positions(request, strategy_id):
         'positions': positions,
         'total_portfolio_value': total_portfolio_value,
         'total_day_pct_change': total_day_pct_change,
+        'strategies': strategies,
+        'watchlists': watchlists,
         }
     
     return render(request, 'positions.html', context)
@@ -323,20 +329,26 @@ def watchlist(request, watchlist_id):
     user = request.user
     watchlist = get_object_or_404(Watchlist, pk=watchlist_id, user=user)
     symbols = WatchedStock.objects.filter(watchlist=watchlist).order_by('symbol')
+    strategies = Strategy.objects.filter(user=request.user).order_by('name')
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
 
     context = {
         'watchlist': watchlist, 
         'symbols': symbols,
+        'strategies': strategies,
+        'watchlists': watchlists,
         }
     return render(request, 'watchlist.html', context)
 
 @login_required
 def watchlists_list(request):
     watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
+    strategies = Strategy.objects.filter(user=request.user).order_by('name')
 
     context = {
         'user': request.user,
         'watchlists': watchlists,
+        'strategies': strategies
     }
     return render(request, 'watchlists_list.html', context)
 

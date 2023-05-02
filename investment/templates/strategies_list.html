@@ -3,11 +3,6 @@
 {% block content %}
 {{ block.super }}
 <h2>Investment Strategies for {{ user.username }}</h2>
-<nav class="navbar">
-    <a href="{% url 'add_strategy'%}"><button class="button">Add Strategy</button></a>
-    <a href="{% url 'edit_strategy'%}"><button class="button">Edit Strategy</button></a>
-    <a href="{% url 'delete_strategy'%}"><button class="button">Delete Strategy</button></a></il>    
-</nav>
 <div class = "table">
     <table class="table">
     <tr>
@@ -30,6 +25,10 @@
     </tr>
 {% endfor %}
 </table>
-
+<nav class="navbar">
+    <a href="{% url 'add_strategy'%}"><button class="button">Add Strategy</button></a>
+    <a href="{% url 'edit_strategy'%}"><button class="button">Edit Strategy</button></a>
+    <a href="{% url 'delete_strategy'%}"><button class="button">Delete Strategy</button></a></il>    
+</nav>
 
 {% endblock %}
