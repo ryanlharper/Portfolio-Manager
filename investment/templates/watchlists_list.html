@@ -10,7 +10,7 @@
     </tr>
     {% for watchlist in watchlists %}
         <tr>
-        <td><a href="{% url 'watchlist' watchlist_id=watchlist.id %}"><button class="button">{{ watchlist.name }}</button></td>
+        <td><a href="{% url 'watchlist' watchlist_id=watchlist.id %}"><button class="button">{{ watchlist.name }}</button></a></td>
         
     </tr>
     {% empty %}

@@ -114,3 +114,24 @@ class WatchedStock(models.Model):
             realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
             day_return = ((realtime_price / begining_price) - 1) * 100
             return day_return
+
+class Index(models.Model):
+    symbol = models.CharField(max_length=8)
+    name = models.CharField(max_length=128)
+        
+    def __str__(self):
+        return self.symbol
+    
+    def level(self):
+        level = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+        return Decimal(level)
+    
+    def day_return(self):
+        if self.symbol == '*USD':
+            day_return = 0
+            return day_return
+        else:
+            begining_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-2]
+            realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            day_return = ((realtime_price / begining_price) - 1) * 100
+            return day_return

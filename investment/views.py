@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm
 from investment.forms import EditWatchlistForm, AddSecurityForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
-from investment.models import Strategy, Transaction, Position, Watchlist, WatchedStock
+from investment.models import Strategy, Transaction, Position, Watchlist, WatchedStock, Index
 from decimal import Decimal
 
 @login_required
@@ -374,12 +374,16 @@ def add_security(request, watchlist_id):
 
 from .models import Strategy, Watchlist
 
+@login_required
 def home(request):
-    strategies = Strategy.objects.all()
-    watchlists = Watchlist.objects.all()
+    user = request.user
+    strategies = Strategy.objects.filter(user=user)
+    watchlists = Watchlist.objects.filter(user=user)
+    indexes = Index.objects.all()
     context = {
         'strategies': strategies,
         'watchlists': watchlists,
+        'indexes':indexes
     }
     return render(request, 'home.html', context)
 
