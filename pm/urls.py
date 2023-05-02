@@ -20,7 +20,8 @@ from pm.views import SignUpView
 from investment.views import add_strategy, strategies_list, transactions_list, positions
 from investment.views import add_position, success_view, failure_view, delete_strategy
 from investment.views import sell_position, increase_position, edit_strategy, add_watchlist
-from investment.views import watchlist, watchlists_list, add_security, home
+from investment.views import watchlist, watchlists_list, add_security, home, delete_watchlist
+from investment.views import edit_watchlist
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,4 +43,6 @@ urlpatterns = [
     path('watchlist/<int:watchlist_id>/', watchlist, name='watchlist'),
     path('watchlists/', watchlists_list, name='watchlists_list'),
     path('add_security/<int:watchlist_id>/', add_security, name='add_security'),
+    path('delete_watchlist/', delete_watchlist, name='delete_watchlist'),
+    path('edit_watchlist/', edit_watchlist, name='edit_watchlist'),
 ]

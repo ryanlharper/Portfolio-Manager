@@ -114,4 +114,3 @@ class WatchedStock(models.Model):
             realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
             day_return = ((realtime_price / begining_price) - 1) * 100
             return day_return
-        

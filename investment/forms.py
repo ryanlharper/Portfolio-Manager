@@ -204,3 +204,8 @@ class AddSecurityForm(forms.Form):
         if not symbol:
             raise ValidationError("Symbol is required.")
         return cleaned_data
+    
+class EditWatchlistForm(forms.ModelForm):
+    class Meta:
+        model = Watchlist
+        fields = ['name']

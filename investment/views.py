@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm, AddSecurityForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
+from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm
+from investment.forms import EditWatchlistForm, AddSecurityForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
 from investment.models import Strategy, Transaction, Position, Watchlist, WatchedStock
 from decimal import Decimal
 
@@ -381,3 +382,32 @@ def home(request):
         'watchlists': watchlists,
     }
     return render(request, 'home.html', context)
+
+@login_required
+def delete_watchlist(request):
+    if request.method == 'POST':
+        watchlist_id = request.POST.get('watchlist')
+        watchlist = Watchlist.objects.get(id=watchlist_id, user=request.user)
+        watchlist.delete()
+        return redirect('watchlists_list')
+    else:
+        watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
+        context = {'watchlists': watchlists}
+        return render(request, 'delete_watchlist.html', context)
+
+
+@login_required
+def edit_watchlist(request):
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
+    form = EditWatchlistForm(request.POST or None)
+
+    if request.method == 'POST':
+        watchlist_id = request.POST.get('watchlist')
+        watchlist = Watchlist.objects.get(id=watchlist_id, user=request.user)
+        form = EditWatchlistForm(request.POST, instance=watchlist)
+        if form.is_valid():
+            form.save()
+            return redirect('watchlists_list')
+
+    context = {'watchlists': watchlists, 'form': form}
+    return render(request, 'edit_watchlist.html', context)

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{{ block.super }}
+
+<h2>Delete Watchlist</h2>
+
+<form method="POST" action="{% url 'delete_watchlist' %}">
+    {% csrf_token %}
+    <label for="watchlist">Select watchlist to delete:</label>
+    <select name="watchlist" id="watchlist">
+      {% for watchlist in watchlists %}
+      <option value="{{ watchlist.id }}">{{ watchlist.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="button">Delete</button>
+</form>
+
+{% endblock %}
+  
