@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{{ block.super }}
+
+<h2>Add Watchlist</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Add Watchlist</button>
+  </form>
+
+{% endblock %}
+  

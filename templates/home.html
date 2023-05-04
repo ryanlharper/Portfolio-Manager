@@ -1,16 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Investment Manager Tools{% endblock %}
 
 {% block content %}
 {{ block.super }}
+{% load humanize %}
 {% if user.is_authenticated %}
-<h2>Home</h2>
-  Hi {{ user.username }}!
+<h2>Portfolio Manager Home</h2>
+<div class = "table-responsive">
+  <table class="table">
+  <thead>
+    <tr>
+      <th>Index</th>
+      <th>Level</th>
+      <th>Change</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for index in indexes %}
+    <tr>
+      {% if index.day_return < 0 %}
+        <td style="color:red">{{ index.name }}</td>
+        <td style="color:red">{{ index.level|floatformat:"2"|intcomma }}</td>
+        <td style="color:red">{{ index.day_return|floatformat:"2" }}%</td>
+      {% else %}
+      <td style="color:green">{{ index.name }}</td>
+      <td style="color:green">{{ index.level|floatformat:"2"|intcomma }}</td>
+      <td style="color:green">{{ index.day_return|floatformat:"2" }}%</td>
+      {% endif %}
+    {% empty %}
+  {% endfor %}
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>
 {% endif %}
 {% endblock %}
-  
+
 

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+<h2>Add security to {{ watchlist.name }}</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit", class="button">Add</button>
+  </form>
+{% endblock %}

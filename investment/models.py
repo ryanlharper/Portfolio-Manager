@@ -69,7 +69,7 @@ class Position(models.Model):
         return float(self.quantity * self.price())
     
     def dollar_return(self):
-        return((self.price() - self.cost)*self.quantity)
+        return float(((self.price() - self.cost)*self.quantity))
 
     def percent_portfolio(self):
         strategy_positions = Position.objects.filter(strategy=self.strategy)
@@ -79,3 +79,59 @@ class Position(models.Model):
             return percent_portfolio
         else:
             return (self.market_value() / total_portfolio_value) * 100
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=128)
+
+    unique_together = (user,name)
+
+    def __str__(self):
+        return self.name
+ 
+class WatchedStock(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    watchlist = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
+    symbol = models.CharField(max_length=8)
+        
+    def __str__(self):
+        return self.symbol
+    
+    def price(self):
+        if self.symbol == '*USD':
+            price = 1
+            return price
+        else:
+            price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            return Decimal(price)
+    
+    def day_return(self):
+        if self.symbol == '*USD':
+            day_return = 0
+            return day_return
+        else:
+            begining_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-2]
+            realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            day_return = ((realtime_price / begining_price) - 1) * 100
+            return day_return
+
+class Index(models.Model):
+    symbol = models.CharField(max_length=8)
+    name = models.CharField(max_length=128)
+        
+    def __str__(self):
+        return self.symbol
+    
+    def level(self):
+        level = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+        return Decimal(level)
+    
+    def day_return(self):
+        if self.symbol == '*USD':
+            day_return = 0
+            return day_return
+        else:
+            begining_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-2]
+            realtime_price = yf.Ticker(self.symbol).history(period='4d')['Close'].iloc[-1]
+            day_return = ((realtime_price / begining_price) - 1) * 100
+            return day_return

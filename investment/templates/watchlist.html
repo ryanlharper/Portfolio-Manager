@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ watchlist.name }}{% endblock %}
+{% block content %}
+{{ block.super }}
+{% load humanize %}
+<h2>Stocks for {{ watchlist.name }}</h2>
+<div class = "table">
+    <table class="table">
+    <tr>
+        <th>Symbol</th>
+        <th>Price</th>
+        <th>Day Change</th>
+    </tr>
+    {% for symbol in symbols %}
+
+        <tr>
+        <td>{{ symbol.symbol }}</td>
+        <td>{{ symbol.price|floatformat:"2"|intcomma }}</td>
+        {% if symbol.day_return < 0 %}
+          <td style="color:red">{{ symbol.day_return|floatformat:"2"|intcomma }}%</td>
+        {% else %}
+        <td>{{ symbol.day_return|floatformat:"2"|intcomma }}%</span></td>
+        {% endif %}
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">No stocks on this watchlist.</td>
+    </tr>
+{% endfor %}
+</table></div>
+<nav class="navbar">
+    <a href="{% url 'add_security' watchlist_id=watchlist.id %}"><button class="button">Add Security</button></a>
+</nav>
+{% endblock %}

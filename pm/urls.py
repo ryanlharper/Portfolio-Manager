@@ -19,14 +19,17 @@ from django.views.generic.base import TemplateView
 from pm.views import SignUpView
 from investment.views import add_strategy, strategies_list, transactions_list, positions
 from investment.views import add_position, success_view, failure_view, delete_strategy
-from investment.views import sell_position, increase_position, edit_strategy
+from investment.views import sell_position, increase_position, edit_strategy, add_watchlist
+from investment.views import watchlist, watchlists_list, add_security, home, delete_watchlist
+from investment.views import edit_watchlist
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('', home, name='home'),
     path('register/', SignUpView.as_view(), name='register'),
     path('add_strategy/', add_strategy, name='add_strategy'),
+    path('add_watchlist/', add_watchlist, name='add_watchlist'),
     path('delete_strategy/', delete_strategy, name='delete_strategy'),
     path('strategies/', strategies_list, name='strategies_list'),
     path('transactions/<int:strategy_id>/', transactions_list, name='transactions_list'),
@@ -37,4 +40,9 @@ urlpatterns = [
     path('sell/<int:strategy_id>/<str:symbol>/', sell_position, name='sell_position'),
     path('increase/<int:strategy_id>/<str:symbol>/', increase_position, name='increase_position'),
     path('edit-strategy/', edit_strategy, name='edit_strategy'),
+    path('watchlist/<int:watchlist_id>/', watchlist, name='watchlist'),
+    path('watchlists/', watchlists_list, name='watchlists_list'),
+    path('add_security/<int:watchlist_id>/', add_security, name='add_security'),
+    path('delete_watchlist/', delete_watchlist, name='delete_watchlist'),
+    path('edit_watchlist/', edit_watchlist, name='edit_watchlist'),
 ]

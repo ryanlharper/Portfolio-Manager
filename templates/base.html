@@ -2,23 +2,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
   <link rel="icon" type="image/png" href="{% static 'images/favicon.jpg' %}">
-  <title>{% block title %}Investment Model Manager{% endblock %}</title>
+  <title>{% block title %}Investment Manager Tools{% endblock %}</title>
 </head>
 <body>
-  <main>
-    {% block content %}
-    <nav class="navbar">
-      <a href="{% url 'strategies_list' %}"><button class="button">Home</button></a>
-      <a href="{% url 'login' %}"><button class="button">Login</button></a>
-      <a href="{% url 'register' %}"><button class="button">Register</button></a>
-      <a href="{% url 'logout' %}"><button class="button">Logout</button></a>  
-    </nav>
-    {% endblock %}
-  </main>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        {% block sidebar %}
+          {% include "sidebar.html" %}
+        {% endblock %}
+      </div>
+      <div class="col-md-9">
+        <main>
+          {% block content %}
+          {% endblock %}
+        </main>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
