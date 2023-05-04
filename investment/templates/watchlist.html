@@ -9,12 +9,15 @@
     <tr>
         <th>Symbol</th>
         <th>Price</th>
+        <th>Delete</th>
         <th>Day Change</th>
     </tr>
     {% for symbol in symbols %}
 
         <tr>
         <td>{{ symbol.symbol }}</td>
+        <td><a href="{% url 'remove_security' watchlist_id=watchlist.id symbol=symbol.symbol %}"><button class="button">Delete</button></a></td>
+        </td>
         <td>{{ symbol.price|floatformat:"2"|intcomma }}</td>
         {% if symbol.day_return < 0 %}
           <td style="color:red">{{ symbol.day_return|floatformat:"2"|intcomma }}%</td>

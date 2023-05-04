@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm
+from investment.forms import NewStrategyForm, AddPositionForm, NewWatchlistForm, RemoveWatchlistItemForm
 from investment.forms import EditWatchlistForm, AddSecurityForm, SellPositionForm, IncreasePositionForm, EditStrategyForm
 from investment.models import Strategy, Transaction, Position, Watchlist, WatchedStock, Index
 from decimal import Decimal
@@ -436,3 +436,24 @@ def edit_watchlist(request):
 
     context = {'watchlists': watchlists, 'form': form}
     return render(request, 'edit_watchlist.html', context)
+
+@login_required
+def remove_security(request, watchlist_id, symbol):
+    watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
+
+    if request.method == 'POST':
+        form = RemoveWatchlistItemForm(request.POST, user=request.user, symbol=symbol, watchlist_id=watchlist_id)
+        if form.is_valid():
+            watchlist_item = WatchedStock.objects.get(watchlist=form.cleaned_data['watchlist'], symbol=symbol)
+            watchlist_item.delete()
+            return redirect('success')
+    else:
+        form = RemoveWatchlistItemForm(user=request.user, watchlist_id=watchlist_id, symbol=symbol)
+
+    context = {
+        'form': form,
+        'watchlist': watchlist,
+        'symbol': symbol
+    }
+
+    return render(request, 'remove_security.html', context)

@@ -209,3 +209,17 @@ class EditWatchlistForm(forms.ModelForm):
     class Meta:
         model = Watchlist
         fields = ['name']
+
+class RemoveWatchlistItemForm(forms.Form):
+    symbol = forms.CharField(widget=forms.HiddenInput())
+    watchlist = forms.IntegerField(widget=forms.HiddenInput())
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        symbol = kwargs.pop('symbol')
+        watchlist_id = kwargs.pop('watchlist_id')
+        super().__init__(*args, **kwargs)
+        self.fields['symbol'].initial = symbol
+        self.fields['watchlist'].initial = watchlist_id
+        self.user = user
+    

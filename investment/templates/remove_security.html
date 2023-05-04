@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Delete {{ symbol }} from {{ watchlist.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary"> Confirm Delete</button>
+    </form>
+{% endblock %}
