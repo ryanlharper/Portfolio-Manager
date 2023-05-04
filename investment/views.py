@@ -61,10 +61,14 @@ def transactions_list(request, strategy_id):
     user = request.user
     strategy = get_object_or_404(Strategy, pk=strategy_id, user=user)
     transactions = Transaction.objects.filter(strategy=strategy).order_by('-date')
+    strategies = Strategy.objects.filter(user=request.user).order_by('name')
+    watchlists = Watchlist.objects.filter(user=request.user).order_by('name')
 
     context = {
         'strategy': strategy,
         'transactions': transactions,
+        'strategies': strategies,
+        'watchlists': watchlists,
     }
     return render(request, 'transactions_list.html', context)
 
@@ -175,7 +179,7 @@ def add_position(request, strategy_id):
                 date=date,
                 )
             transaction.save()
-            return redirect('positions', strategy_id=strategy_id)
+            return redirect('success')
 
     context = {
         'form': form,
@@ -243,7 +247,7 @@ def sell_position(request, strategy_id, symbol):
                 date=date
             )
             transaction.save()
-            return redirect('positions', strategy_id=strategy.id)
+            return redirect('success')
                 
     else:
         form = SellPositionForm(symbol=symbol, strategy=strategy.id, user=request.user)
@@ -305,7 +309,7 @@ def increase_position(request, strategy_id, symbol):
                 date=date
             )
             transaction.save()
-            return redirect('positions', strategy_id=strategy.id)
+            return redirect('success')
     
     else:
         form = IncreasePositionForm(symbol=symbol, strategy=strategy.id, user=request.user)
@@ -379,7 +383,7 @@ def add_security(request, watchlist_id):
                 symbol=symbol,   
                 )
                 watchlist_item.save()
-            return redirect('watchlist', watchlist_id=watchlist_id)
+            return redirect('success')
     else:
         form = AddSecurityForm(user=request.user)
 
