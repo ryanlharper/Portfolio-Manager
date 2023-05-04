@@ -65,7 +65,12 @@
       </tr>
       {% endfor %}
       <tr>
-        <td colspan = "8"></td>
+        <td colspan = "7"></td>
+        {% if total_dollar_return < 0 %}
+        <td style="font-weight:bold; color:red">(${{ total_dollar_return|floatformat:"2"|intcomma|cut:"-" }})</td>
+        {% else %}
+        <td style="font-weight:bold;">${{ total_dollar_return|floatformat:"2"|intcomma }}</td>
+        {% endif %} 
         {% if total_day_pct_change < 0 %}
         <td style="font-weight:bold; color:red">{{ total_day_pct_change|floatformat:"2" }}%</td>
         {% else %}

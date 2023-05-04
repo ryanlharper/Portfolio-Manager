@@ -69,7 +69,7 @@ class Position(models.Model):
         return float(self.quantity * self.price())
     
     def dollar_return(self):
-        return((self.price() - self.cost)*self.quantity)
+        return float(((self.price() - self.cost)*self.quantity))
 
     def percent_portfolio(self):
         strategy_positions = Position.objects.filter(strategy=self.strategy)

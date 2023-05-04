@@ -79,16 +79,20 @@ def positions(request, strategy_id):
 
     market_value = []
     total_day_return = []
+    total_dollar_return = []
     for position in positions:
         if position.symbol =='*USD':
             market_value.append(position.market_value())
             total_day_return.append(0.0)
+            total_dollar_return.append(0.0)
         else:
             market_value.append(position.market_value())
             total_day_return.append(position.day_return()*(position.percent_portfolio()/100))
+            total_dollar_return.append(position.dollar_return())
     
     total_portfolio_value = sum(market_value)
     total_day_pct_change = sum(total_day_return)
+    total_dollar_return = sum(total_dollar_return)
 
     context = {
         'strategy': strategy, 
@@ -97,6 +101,7 @@ def positions(request, strategy_id):
         'total_day_pct_change': total_day_pct_change,
         'strategies': strategies,
         'watchlists': watchlists,
+        'total_dollar_return': total_dollar_return,
         }
     
     return render(request, 'positions.html', context)

@@ -7,12 +7,14 @@
         <a href="{% url 'positions' strategy_id=strategy.id %}"><button class="button">{{ strategy.name }}</button></a> 
         </div>
         {% endfor %}
+        <a href="{% url 'add_strategy'%}"><button class="button">Add Strategy</button></a>
         <a href="{% url 'watchlists_list' %}"><button class="button">Watchlists Home</button>
         {% for watchlist in watchlists %}
         <div style="padding-left: 10px;">
         <a href="{% url 'watchlist' watchlist_id=watchlist.id %}"><button class="button">{{ watchlist.name }}</button></a> 
         </div>
         {% endfor %}
+        <a href="{% url 'add_watchlist'%}"><button class="button">Add Watchlist</button></a>
         <a href="{% url 'login' %}"><button class="button">Login</button></a>
         <a href="{% url 'register' %}"><button class="button">Register</button></a>
         <a href="{% url 'logout' %}"><button class="button">Logout</button></a>  
