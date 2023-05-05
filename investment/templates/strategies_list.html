@@ -1,23 +1,17 @@
 {% extends 'base.html' %}
-
+{% block title %}Investment Strategies{% endblock %}
 {% block content %}
 {{ block.super }}
 <h2>Investment Strategies for {{ user.username }}</h2>
 <div class = "table">
     <table class="table">
-    <tr>
-        <th>Portfolio</th>
-        <th>Holdings</th>
-        <th>Transactions</th>
-    </tr>
+
     {% for strategy in strategies %}
 
         <tr>
-        <td>{{ strategy.name }}</td>
-        <td>
-            <a href="{% url 'positions' strategy_id=strategy.id %}"><button class="button">View</button></a> 
-            <a href="{% url 'add_position' strategy_id=strategy.id %}"><button class="button">Add</button></a></td>
-        <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}"><button class="button">View</button></a></td>
+        <td><a href="{% url 'positions' strategy_id=strategy.id %}"><button class="button">{{ strategy.name }} Holdings</button></a></td>
+        <td><a href="{% url 'add_position' strategy_id=strategy.id %}"><button class="button">Add Postition</button></a></td>
+        <td><a href="{% url 'transactions_list' strategy_id=strategy.id%}"><button class="button">View Transactions</button></a></td>
     </tr>
     {% empty %}
     <tr>

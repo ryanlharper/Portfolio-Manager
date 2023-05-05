@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
-
+{% block title %}Watchlists{% endblock %}
 {% block content %}
 {{ block.super }}
 <h2>Watchlists for {{ user.username }}</h2>
 <div class = "table">
     <table class="table">
-    <tr>
-        <th>Watchlist</th>
-    </tr>
+
     {% for watchlist in watchlists %}
         <tr>
         <td><a href="{% url 'watchlist' watchlist_id=watchlist.id %}"><button class="button">{{ watchlist.name }}</button></a></td>

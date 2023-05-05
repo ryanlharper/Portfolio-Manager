@@ -187,12 +187,33 @@ def add_position(request, strategy_id):
     }
     return render(request, 'add_position.html', context)
 
+@login_required
 def success_view(request):
-    return render(request, 'success.html')
+    user=request.user
+    strategies = Strategy.objects.filter(user=user)
+    watchlists = Watchlist.objects.filter(user=user)
 
+    context = {
+        'user': request.user,
+        'watchlists': watchlists,
+        'strategies': strategies
+    }
+    return render(request, 'success.html', context)
+
+@login_required
 def failure_view(request):
-    return render(request, 'failure.html')
+    user=request.user
+    strategies = Strategy.objects.filter(user=user)
+    watchlists = Watchlist.objects.filter(user=user)
 
+    context = {
+        'user': request.user,
+        'watchlists': watchlists,
+        'strategies': strategies
+    }
+    return render(request, 'failure.html', context)
+
+@login_required
 def sell_position(request, strategy_id, symbol):
     strategy = get_object_or_404(Strategy, id=strategy_id)
 
